@@ -1,0 +1,513 @@
+
+2021/03/21  
+顺序表的实现  数组实现  静态数组实现  数据结构的第一步
+#include <iostream>
+#include<stdlib.h>
+#define MAXSIZE  10
+using namespace std;
+
+typedef struct{
+int data[MAXSIZE];
+int length;
+}SqList;
+void InitList(SqList &L);
+void DestroyList(SqList &L);
+bool Insert(SqList &L, int i ,int e);
+bool Delete (SqList&L, int i, int &e);
+
+int  LocateElem(SqList L,int e);
+int GetElem(SqList L,int i);
+
+int Length(SqList L);
+void Print(SqList L);
+bool Empty(SqList L);
+
+void InitList(SqList &L){
+for(int i=0;i<MAXSIZE;i++)
+     L.data[i]=0;
+L.length=0;
+}
+//数组实现i<1
+bool Insert(SqList &L, int i ,int e){
+if(i<1||i>L.length+1)//i<1是因为数组
+     return false;
+if(i>MAXSIZE)
+     return false;
+for(int j=L.length;j>i;i++)
+     L.data[i]=L.data[i+1];
+L.data[i-1]=e;
+L.length++;
+return true;
+}
+bool Delete(SqList &L, int i, int &e){
+if(i<1||i>L.length)
+     return false;
+for(int j=L.length;j>i;i++)
+     L.data[i-1]=L.data[i];
+L.data[L.length]=0;
+L.length--;
+return true;
+}
+int GetElem(SqList L,int i){
+return L.data[i-1];
+}
+int LocateElem(SqList L,int e){
+int i=1;
+for(i;i<=L.length;i++){
+     if(L.data[i-1]==e){
+          return i;
+          break;
+     }
+     else return -1;
+}
+}
+int Length(SqList L){
+int len=0;
+for(int i=1;i<=L.length;i++)
+     len++;
+return len;
+}
+void Print(SqList L){
+for(int i=1;i<=L.length;i++)
+     cout<<L.data[i-1]<<endl;
+}
+bool Empty(SqList L){
+if(L.length==0)
+     return true;
+return false;
+}
+int main()
+{
+     SqList L;
+     InitList(L);
+     Insert(L,1,685);
+     Insert(L,2,91);
+     Insert(L,3,994);
+     Insert(L,4,14);
+     Insert(L,5,334);
+     Insert(L,6,414);
+     Insert(L,7,8866);
+     Delete(L,2,L.data[1]);
+     Print(L);
+     cout<<LocateElem(L, 695)<<endl;
+     cout<<GetElem( L,5)<<endl;
+     cout<<Length(L)<<endl;
+     cout<<Empty(L)<<endl;
+     cout<<L.length<<endl;
+    return 0;
+}
+2021/03/21序表的数组实现  动态内存分配  复制到新的内存中不是在原来的内存中分配
+#include <iostream>
+#include<stdlib.h>
+#define InitSize 5
+using namespace std;
+
+typedef struct {
+int *data;
+int MaxSize;
+int length;
+}SeqList;
+void InitList(SeqList &L);
+void DestroyList(SeqList &L);
+bool Insert(SeqList &L, int i ,int e);
+bool Delete (SeqList&L, int i, int &e);
+
+int  LocateElem(SeqList L,int e);
+int GetElem(SeqList L,int i);
+
+int Length(SeqList L);
+void Print(SeqList L);
+bool Empty(SeqList L);
+
+void IncreaseSize(SeqList &L, int len);
+
+void InitList(SeqList &L){
+L.data=(int *)malloc(InitSize*sizeof(int));
+L.MaxSize=InitSize;
+L.length=0;
+}
+void IncreaseSize(SeqList&L,int len){
+int *p=L.data;
+L.data=(int *)malloc((L.MaxSize+len)*sizeof(int));
+for(int i=1;i<=L.length;i++)
+     L.data[i-1]=p[i-1];
+L.MaxSize=L.MaxSize+len;
+free(p);
+}
+//数组实现i<1
+bool Insert(SeqList &L, int i ,int e){
+if(i<1||i>L.length+1)//i<1是因为数组
+     return false;
+if(i>L.MaxSize)
+     return false;
+for(int j=L.length;j>i;i++)
+     L.data[i]=L.data[i+1];
+L.data[i-1]=e;
+L.length++;
+return true;
+}
+bool Delete(SeqList &L, int i, int &e){
+if(i<1||i>L.length)
+     return false;
+for(int j=L.length;j>i;i++)
+     L.data[i-1]=L.data[i];
+L.data[L.length]=0;
+L.length--;
+return true;
+}
+int GetElem(SeqList L,int i){
+return L.data[i-1];
+}
+int LocateElem(SeqList L,int e){
+int i=1;
+for(i;i<=L.length;i++){
+     if(L.data[i-1]==e){
+          return i;
+          break;
+     }
+     else return -1;
+}
+}
+int Length(SeqList L){
+int len=0;
+for(int i=1;i<=L.length;i++)
+     len++;
+return len;
+}
+void Print(SeqList L){
+for(int i=1;i<=L.length;i++)
+     cout<<L.data[i-1]<<endl;
+}
+bool Empty(SeqList L){
+if(L.length==0)
+     return true;
+return false;
+}
+int main()
+{
+     SeqList L;
+     InitList(L);
+     Insert(L,1,685);
+     Insert(L,2,91);
+     IncreaseSize(L,10);
+     Insert(L,3,994);
+     Insert(L,4,14);
+     Insert(L,5,334);
+
+     Insert(L,6,414);
+     Insert(L,7,8866);
+     Insert(L,8,6);
+     Insert(L,9,9191);
+     Delete(L,2,L.data[1]);
+     Print(L);
+     cout<<LocateElem(L, 695)<<endl;
+     cout<<GetElem( L,2)<<endl;
+     cout<<Length(L)<<endl;
+     cout<<Empty(L)<<endl;
+     cout<<L.length<<endl;
+     cout<<L.data[0]<<endl;
+
+    return 0;
+}
+
+线性表之链表的实现、  带头结点的方式
+#include<iostream>
+#include<stdlib.h>
+
+using namespace std;
+
+typedef struct Lnode{
+int data;
+struct Lnode *next;
+}Lnode,*LinkList;
+
+bool InitList(LinkList &L);
+LinkList HeadInsert(LinkList &L); //头插法建立一个新链表
+
+LinkList TailInsert(LinkList &L); //尾插法建立一个新链表
+void DestroyList(LinkList &L);
+bool Insert(LinkList &L, int i ,int e);
+bool InsertNext(Lnode *p, int e);
+bool InsertPrior(Lnode *p ,int e);
+bool DeleteNode(Lnode *p);
+bool Delete (LinkList&L, int i, int &e);
+bool Delete1 (LinkList&L, int i, int &e);
+int  LocateElem(LinkList L,int e);
+Lnode* GetElem(LinkList L,int i);
+
+int Length(LinkList L);
+void Print(LinkList L);
+bool Empty(LinkList L);
+
+bool Insert1(LinkList &L, int i ,int e);
+
+void printLinkListReverse(LinkList &L);
+
+//带头结点的链表
+bool InitList(LinkList &L){
+     L=(Lnode *)malloc(sizeof(Lnode));
+     if(L==NULL)
+          return false;
+     L->next=NULL;
+     L->data=0;
+     return true;
+}
+LinkList HeadInsert(LinkList &L){
+     int x;
+     L=(LinkList )malloc(sizeof(Lnode));
+     L->next=NULL;
+     cin>>x;
+     cout<<endl;
+     while(x!=9999){
+          Lnode *s;
+          s=(Lnode *)malloc(sizeof(Lnode));
+          s->data=x;
+          s->next=L->next;
+          L->next=s;
+          cin>>x;
+     }
+     return L;
+}
+
+LinkList TailInsert(LinkList &L){
+     int x;
+     L=(LinkList)malloc(sizeof(Lnode));
+     Lnode *s, *r=L;
+     cin>>x;
+     while(x!=9999){
+          s=(LinkList)malloc(sizeof(Lnode));
+          s->data=x;
+          r->next=s;
+          r=s;
+          cin>>x;
+     }
+     r->next=NULL;
+     return L;
+}
+bool Insert(LinkList &L, int i ,int e){
+if(i<1)
+     return false;
+Lnode *p;
+int j=1;
+p=L->next;
+while(p!=NULL&&j<i-1){
+     p=p->next;
+     j++;
+}
+//if(p==NULL)
+//     return false;
+Lnode *s=(Lnode *)malloc(sizeof(Lnode));
+s->data=e;
+s->next=p->next;
+p->next=s;
+return true;
+}
+
+bool InsertNext(Lnode *p, int e){
+if(p==NULL)
+     return false;
+Lnode *s=(Lnode *)malloc(sizeof (Lnode));
+if(s==NULL)return false;
+s->data=e;
+s->next=p->next;
+p->next=s;
+return true;
+}
+bool InsertPrior(Lnode *p , int e){
+if(p==NULL)
+     return false;
+Lnode *s= (Lnode *)malloc(sizeof(Lnode));
+
+if(s==NULL)
+     return false;
+s->next=p->next;
+p->next=s;
+s->data=p->data;
+p->data=e;
+return true;
+}
+
+bool DeleteNode(Lnode *p){
+     if(p==NULL)
+          return false;
+//     if(p->next=NULL)
+//          return false;
+//     else{
+
+     Lnode *q=p->next;
+     p->data=q->data;
+     p->next=q->next;
+
+    // q=NULL;
+     free(q);
+//     }
+     return true;
+}
+bool Delete (LinkList&L, int i, int &e){
+if(i<1)
+     return false;
+Lnode *p= L->next;
+int j=1;
+while (p!=NULL&&j<i-1){
+     p=p->next;
+     j++;
+}
+if(p==NULL){
+     return false;
+}
+e=p->next->data;
+p->next=p->next->next;
+free(p->next);
+
+return true;
+}
+
+bool Delete1 (LinkList&L, int i, int &e){
+if(i<1)
+     return false;
+GetElem(L,i-1);
+return DeleteNode(L);
+}
+Lnode* GetElem(LinkList L,int i){
+if(i==0)
+     return L;
+if(i<1)
+     return NULL;
+Lnode *p=L->next;
+int j=1;
+while(p!=NULL&&j<i){
+     p=p->next;
+     j++;
+     }
+return p;
+}
+
+int  LocateElem(LinkList L,int e){
+if(L->next==NULL)
+     return 0;
+Lnode *p=L->next;
+int len=1;
+for(;p!=NULL;){
+     if(p->data!=e){
+          p=p->next;
+          len++;
+     }
+     else
+          return len;
+}
+}
+
+int Length(LinkList L){
+int length=0;
+LinkList p=L;
+while(p->next!=NULL){
+     p=p->next;
+     length++;
+}
+return length;
+}
+void Print(LinkList L){
+if(L->next==NULL)
+     return;
+Lnode *p=L->next;
+//for(int i=1;i<=8;i++){
+//     cout<<p->data<<endl;
+//     p=p->next;
+//}
+
+while(p!=NULL){
+     cout<<p->data<<endl;
+     p=p->next;
+}
+cout<<endl;
+}
+
+bool Empty(LinkList L){
+     if(L->next==NULL)
+          return false;
+     return true;
+}
+
+bool Insert1(LinkList &L, int i ,int e){
+
+if(i<1)
+     return false;
+Lnode *p=L->next;
+int j=1;
+while(p!=NULL&&j<i-1){
+     p=p->next;
+     j++;
+}
+return InsertNext(p,e);
+}
+
+void DestroyList(LinkList &L){
+     while(L->next!=NULL)
+          DeleteNode(L);
+
+     free(L);
+     L=NULL;
+}
+
+//int a=10;
+//
+//int &b=a;
+//不要返回局部变量的地址,局部变量栈区的数据在函数执行完后自动释放。
+
+void printLinkListReverse(Lnode *head){
+     stack<Lnode* > nodesStack;
+     Lnode *p=head;
+     
+     while(p!=NULL){
+          nodesStack.push(p);
+          p=p->next;
+     }
+     while(!nodesStack.empty()){
+          p=nodesStack.top();
+          cout<<"\t"<<p->data<<endl;
+          nodesStack.pop();
+     }
+}
+
+int main(){
+     LinkList L;
+     InitList(L);
+
+//     cout<<InsertNext(L,91)<<endl;
+//     InsertNext(L,221);
+//     InsertNext(L,71);
+//     InsertNext(L,31);
+//     InsertNext(L,621);
+     HeadInsert(L);
+    // cout<<Insert1(L,3,994)<<endl;
+     //Insert(L,4,14);
+
+//     cout<<Insert(L,5,334)<<endl;
+//
+//     cout<<Insert(L,6,414)<<endl;
+//     Insert(L,7,8866);
+//     Insert(L,8,6);
+//     Insert(L,9,9191);
+//     InsertPrior(L,11);
+//     InsertNext(L,21);
+//     InsertNext(L,821);
+
+//     InsertPrior(L,111);
+     //InsertPrior(L,161);
+    //cout<<DeleteNode(L)<<endl;
+
+//     InsertPrior(L,92);
+//     InsertNext(L,21);
+//     InsertNext(L,21);
+     InsertNext(L,821);
+     InsertPrior(L,191);
+//     cout<<GetElem(L,5)->data<<endl;
+//     cout<<LocateElem(L,4)<<endl;
+     Print(L);
+     cout<<"链表长度为"<<Length(L)<<endl;
+     cout<<"萧泡辉啊啊啊"<<endl;
+
+     DestroyList(L);
+     //system("pause");
+	return 0;
+}
