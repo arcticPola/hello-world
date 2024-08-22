@@ -3,9 +3,16 @@
 template<typename T>
 class myVector
 {
+public:
+    myVector();
+    myVector(int s);
+    myVector(int s, T a);
+    ~myVector();
 
 private:
-    T *elem;
-    int size;
-    int capacity;
+    T *m_elem;
+    int m_size;
+    int m_capacity;
 };
+
+
