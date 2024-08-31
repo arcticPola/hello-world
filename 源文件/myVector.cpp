@@ -8,12 +8,12 @@ inline myVector<T>::myVector() : start(nullptr), finish(nullptr),end_of_storage(
 }
 
 template <typename T>
-myVector<T>::myVector(int n):start(new T[n * sizeof(T)]), finish(start + n),end_of_storage(finish)
+myVector<T>::myVector(size_t n):start(new T[n * sizeof(T)]), finish(start + n),end_of_storage(finish)
 {
 }
 
 template <typename T>
-myVector<T>::myVector(int n, const T&val = T()):start(new T[n * sizeof(T)]),finish(start + n),end_of_storage(finish)
+myVector<T>::myVector(size_t n, const T&val = T()):start(new T[n * sizeof(T)]),finish(start + n),end_of_storage(finish)
 {
     for (int i = 0; i < n; i++)
     {
@@ -22,7 +22,7 @@ myVector<T>::myVector(int n, const T&val = T()):start(new T[n * sizeof(T)]),fini
 }
 
 template <typename T>
-myVector<T>::myVector(const myVector<T>& vec):m_size(vec.m_size),m_capacity(vec.m_capacity)
+myVector<T>::myVector(const myVector<T>& vec):start(new T),
 {
     delete m_elem;
     this->m_elem = new T[m_size];
@@ -33,9 +33,14 @@ myVector<T>::myVector(const myVector<T>& vec):m_size(vec.m_size),m_capacity(vec.
 }
 
 template <typename T>
-myVector<T>::myVector(initializer_list<T> li):m_size(li.size()),m_capacity(li.size()),m_elem(new T[li.size()])
+myVector<T>::myVector(initializer_list<T> li):start(new [li.size()]),finish(start + li.size()),end_of_storage(finish)
 {
-    auto it = li.begin();
+    auto it = start;
+    for (const auto &x : li)
+    {
+        *it = x;
+        it++;
+    }
 }
 
 template <typename T>
