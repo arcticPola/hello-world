@@ -13,8 +13,9 @@ public:
     myVector(const myVector<T> &vec);
     myVector(initializer_list<T> li);
     ~myVector();
+    
     template <typename iterator>
-    myVector(iterator firsh, iterator last);
+    myVector(iterator first, iterator last);
     myVector<T> &operator=(const myVector<T> &vec);
     myVector<T> &operator=(initializer_list<T> li);
     T &operator[](size_t index) const;
@@ -24,11 +25,15 @@ public:
     void push_back(T &&a);
     T *begin();
     T *end();
+    T *rbegin();
+    T *rend();
     bool empty();
     size_t size();
     size_t capacity();
     void resize(size_t size);
-    const T &front();
+    void reserve(size_t size);
+    void swap();
+    const T& front();
     const T& back();
 
 private:
@@ -39,3 +44,5 @@ private:
     Iterator finish;
     Iterator end_of_storage;
 };
+
+

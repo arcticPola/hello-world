@@ -13,7 +13,7 @@ myVector<T>::myVector(size_t n):start(new T[n * sizeof(T)]), finish(start + n),e
 }
 
 template <typename T>
-myVector<T>::myVector(size_t n, const T&val = T()):start(new T[n * sizeof(T)]),finish(start + n),end_of_storage(finish)
+myVector<T>::myVector(size_t n, const T& val = T()):start(new T[n * sizeof(T)]),finish(start + n),end_of_storage(finish)
 {
     for (int i = 0; i < n; i++)
     {
@@ -22,13 +22,13 @@ myVector<T>::myVector(size_t n, const T&val = T()):start(new T[n * sizeof(T)]),f
 }
 
 template <typename T>
-myVector<T>::myVector(const myVector<T>& vec):start(new T),
+myVector<T>::myVector(const myVector<T>& vec):start(new T[vec.capacity()]),finish(start + vec.size()),end_of_storage(start+vec.capacity())
 {
-    delete m_elem;
-    this->m_elem = new T[m_size];
-    for (int i = 0; i < m_size;i++)
+    auto it = start;
+    for (const auto &x : vec)
     {
-        m_elem[i] = vec.m_elem[i];
+        *it = x;
+        ++it;
     }
 }
 
@@ -46,20 +46,44 @@ myVector<T>::myVector(initializer_list<T> li):start(new [li.size()]),finish(star
 template <typename T>
 myVector<T>::~myVector()
 {
-    m_size = 0;
-    m_capacity = 0;
-    delete m_elem;
+    if(start)
+    {
+        delete start;
+        start = nullptr;
+        finish = nullptr;
+        end_of_storage = nullptr;
+    }
+}
+
+template <typename T>
+template <typename iterator>
+inline myVector<T>::myVector(iterator first, iterator last):start(new T[last - first]),finish(first),end_of_storage(start + last - first)
+{
+    while (finish != last)
+    {
+        *finish = *first;
+        finish++;
+        first++;
+    }
 }
 
 template <typename T>
 const T& myVector<T>::at(int index)
 {
-    // TODO: insert return statement here
+    if(index >= this->size())
+    {
+        out_of_range();
+    }
+    return *(start + index);
 }
 
 template <typename T>
 void myVector<T>::push_back(T &a)
 {
+    if(finish == end_of_storage)
+    {
+
+    }
 }
 
 template <typename T>
