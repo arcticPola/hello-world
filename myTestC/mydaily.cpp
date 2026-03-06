@@ -30,11 +30,33 @@ void BubbleSort01(vector<int> &nums)
         }
     }
 }
+///-------------------||
+///|||----------------
+void BubbleSort02(vector<int>& nums)
+{
+    int n = nums.size();
+    for (int i = 0; i < n - 1;i++)
+    {
+        bool isSwap = false; // ÊÇ·ñ½»»»¹ý
+        for (int j = n - 1; j > i; j--)
+        {
+            if(nums[j] < nums[j-1])
+            {
+                swap(nums[j], nums[j - 1]);
+                isSwap = true;
+            }
+        }
+        if(isSwap == false)
+        {
+            return;
+        }
+    }
+}
 
 int main()
 {
     vector<int> vec = {33, 2, 55, 32, 34, 22, 11, 45, 242, 52};
-    BubbleSort01(vec);
+    BubbleSort02(vec);
     for(auto&&x : vec)
     {
         cout << x << endl;
